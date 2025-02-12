@@ -1,0 +1,164 @@
+# 1. simple wire
+### 문제
+와이어처럼 동작하는 하나의 입력과 하나의 출력이 있는 모듈을 만듭니다.
+![](https://velog.velcdn.com/images/courage_hw/post/48df140c-8a33-45c9-956d-2f704ca5852f/image.png)
+
+### 코드
+```verilog
+module top_module(input in, output out);
+	assign out = in;
+endmodule
+```
+---
+
+# 2. Four wires
+### 문제
+3개의 입력과 4개의 출력이 있는 모듈을 생성하며, 이 모듈은 이러한 연결을 만드는 와이어처럼 동작합니다.
+
+a -> w
+b -> x
+b -> y
+c -> z
+![](https://velog.velcdn.com/images/courage_hw/post/44e88bb4-60b9-441c-a76f-f5538f71dcaf/image.png)
+### 코드
+```verilog
+module top_module( 
+    input a,b,c,
+    output w,x,y,z );
+    
+    assign w = a;
+    assign x = b;
+    assign y = b;
+    assign z = c;
+
+endmodule
+```
+---
+
+# 3. Inverter
+### 문제
+NOT 게이트를 구현하는 모듈을 만듭니다.
+![](https://velog.velcdn.com/images/courage_hw/post/3289fab3-08a5-4757-a4b2-0eb3bdf50b8f/image.png)
+### 코드
+```verilog
+module top_module( input in, output out );
+	// assign out = ~in; // 방법 1
+    not(out, in); // 방법 2
+endmodule
+```
+
+---
+# 4. AND Gate
+### 문제
+AND 게이트를 구현하는 모듈을 만듭니다.
+![](https://velog.velcdn.com/images/courage_hw/post/edb21dd1-1c1e-46b8-bb0f-386a7f65213c/image.png)
+
+### 코드
+```verilog
+module top_module( 
+    input a, 
+    input b, 
+    output out );
+	
+    // assign out = a & b; // 방법 1
+    and(out, a, b); // 방법 2
+
+endmodule
+```
+---
+# 5. NOR Gate
+### 문제
+NOR 게이트를 구현하는 모듈을 만듭니다
+![](https://velog.velcdn.com/images/courage_hw/post/b3edc230-4a3a-4162-8833-85b0eb38e253/image.png)
+
+### 코드
+```verilog
+module top_module( 
+    input a, 
+    input b, 
+    output out );
+
+	// assign out = ~(a | b);
+    nor(out, a, b);
+
+endmodule
+```
+---
+# 6. XNOR Gate
+### 문제
+XNOR 게이트를 구현하는 모듈을 만듭니다.
+![](https://velog.velcdn.com/images/courage_hw/post/a58c4cd7-4cf4-4407-8b21-ebdca1429a65/image.png)
+
+### 코드
+```verilog
+module top_module( 
+    input a, 
+    input b, 
+    output out );
+
+	// assign out = ~(a ^ b);
+    xnor(out, a, b);
+
+endmodule
+```
+---
+# 7. Declaring wires
+### 문제
+wire를 본문에 선언
+![](https://velog.velcdn.com/images/courage_hw/post/fe00ebb4-fb68-48fa-ab54-3c8daa86561f/image.png)
+
+
+### 코드
+```verilog
+module top_module(
+    input a,
+    input b,
+    input c,
+    input d,
+    output out,
+    output out_n   ); 
+    
+	wire w1, w2; // w1과 w2 wire선언
+    
+    assign w1 = a & b;
+    assign w2 = c & d;
+    
+    assign out = w1 | w2;
+    assign out_n = ~(w1 | w2);
+    
+endmodule
+```
+---
+# 8. 7458 chip
+### 문제
+7458은 4개의 AND 게이트와 2개의 OR 게이트가 있는 칩입니다
+![](https://velog.velcdn.com/images/courage_hw/post/a7ed8999-f1fd-41dd-87de-d6a6ce43216c/image.png)
+
+
+### 코드
+```verilog
+module top_module ( 
+    input p1a, p1b, p1c, p1d, p1e, p1f,
+    output p1y,
+    input p2a, p2b, p2c, p2d,
+    output p2y );
+
+	// 방법 1. 한번에 선언
+    assign p1y = (p1a & p1b & p1c) | (p1d & p1e & p1f);
+    assign p2y = (p2a & p2b) | (p2c & p2d);
+    
+    // 방법 2. wire를 선언
+    wire w1, w2, w3, w4;
+    assign w1 = p1a & p1b & p1c;
+    assign w2 = p1d & p1e & p1f;
+    assign p1y = w1 | w2;
+    
+    assign w3 = p2a & p2b;
+    assign w4 = p2c & p2d;
+    assign p2y = w3 | w4;
+
+endmodule
+```
+---
+
+다음시간은 Vector 에 대해 알아보겠다.
