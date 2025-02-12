@@ -1,0 +1,208 @@
+# 1. Vectors
+### 문제
+하나의 3비트 입력이 있는 회로를 구축한 다음 동일한 벡터를 출력하고 이를 3개의 개별 1비트 출력으로 분할합니다. output을 입력 벡터의 위치 0, 위치 1 등에 연결합니다.
+![](https://velog.velcdn.com/images/courage_hw/post/f551a0e2-89ee-4c6e-a304-afb6fef6ff8b/image.png)
+
+### 코드
+```verilog
+module top_module ( 
+    input wire [2:0] vec,
+    output wire [2:0] outv,
+    output wire o2,
+    output wire o1,
+    output wire o0  );
+    
+    assign outv = vec;
+    assign o2 = vec[2];
+    assign o1 = vec[1];
+    assign o0 = vec[0];
+
+endmodule
+```
+
+
+
+
+# 2. Vectors in more detail
+### 문제
+입력 하프 워드(16비트, [15:0])를 하위 [7:0] 및 상위 [15:8] 바이트로 분할하는 조합 회로를 구축합니다.
+### 코드
+```verilog
+module top_module( 
+    input wire [15:0] in,
+    output wire [7:0] out_hi,
+    output wire [7:0] out_lo );
+
+	assign out_hi = in[15:8];
+    assign out_lo = in[7:0];
+
+endmodule
+```
+
+
+
+
+# 3. Vector part selection
+### 문제
+ 4바이트 단어의 바이트 순서를 반대로 하는 회로를 구축합니다.
+ AaaaaaaaBbbbbbbbCcccccccDddddddd => DdddddddCcccccccBbbbbbbbAaaaaaaa
+### 코드
+```verilog
+module top_module( 
+    input [31:0] in,
+    output [31:0] out );//
+
+    assign out[31:24] = in[7:0];
+    assign out[23:16] = in[15:8];
+    assign out[15:8] = in[23:16];
+    assign out[7:0] = in[31:24];
+
+endmodule
+```
+
+
+
+
+# 4. Bitwise operators
+### 문제
+두 벡터의 비트 OR, 두 벡터의 논리 OR, 두 벡터의 역(NOT)을 계산하는 두 개의 3비트 입력이 있는 회로를 구축합니다.
+![](https://velog.velcdn.com/images/courage_hw/post/275742f9-e3c7-432c-a652-4ad3cb13efe6/image.png)
+
+### 코드
+```verilog
+module top_module( 
+    input [2:0] a,
+    input [2:0] b,
+    output [2:0] out_or_bitwise,
+    output out_or_logical,
+    output [5:0] out_not
+);
+
+	assign out_or_bitwise = a | b;
+    assign out_or_logical = a || b;
+    assign out_not[5:3] = ~b;
+    assign out_not[2:0] = ~a;
+    
+endmodule
+```
+
+
+
+
+# 5. Fout-input gates
+### 문제
+[3:0]에서 4개의 입력이 있는 조합 회로를 구축합니다.
+### 코드
+```verilog
+module top_module( 
+    input [3:0] in,
+    output out_and,
+    output out_or,
+    output out_xor
+);
+
+	// 방법 1.
+    assign out_and = in[0] & in[1] & in[2] & in[3];
+    assign out_or  = in[0] | in[1] | in[2] | in[3];
+    assign out_xor = in[0] ^ in[1] ^ in[2] ^ in[3];
+    
+    // 방법 2.
+    assign out_and = &in;
+    assign out_or  = |in;
+    assign out_xor = ^in;
+    
+endmodule
+```
+
+
+
+
+
+# 6. Vector concatenation operator
+### 문제
+여러 입력 벡터가 주어지면 함께 결합한 다음 여러 출력 벡터로 분할합니다. 6개의 5비트 입력 벡터(a, b, c, d, e, f)가 있으며 총 30비트의 입력이 있습니다. 32비트 출력에 대해 w, x, y, z의 4개 8비트 출력 벡터가 있습니다. 출력은 입력 벡터와 두 개의 1 비트를 결합한 것이어야 합니다.
+![](https://velog.velcdn.com/images/courage_hw/post/f4ea161b-2345-4898-84ab-e37c792ca954/image.png)
+
+### 코드
+```verilog
+module top_module (
+    input [4:0] a, b, c, d, e, f,
+    output [7:0] w, x, y, z );//
+
+    assign { w, x, y, z } = { a, b, c, d, e, f, {2{1'b1}} };
+
+endmodule
+```
+
+
+
+
+
+# 7. Vector reversal 1
+### 문제
+8비트 입력 벡터 [7:0]이 주어지면 비트 순서를 반대로 합니다.
+### 코드
+```verilog
+module top_module( 
+    input [7:0] in,
+    output [7:0] out
+);
+
+	// 방법 1.
+	assign out = {in[0], in[1], in[2], in[3], in[4], in[5], in[6], in[7]};
+
+	// 방법 2.
+    integer i;
+    always @(*) begin
+        for(i = 0; i < 8; i = i + 1) begin
+            out[i] = in[7-i];
+        end
+    end
+	
+endmodule
+```
+
+
+
+
+
+# 8. Replication operator
+### 문제
+8비트 숫자를 32비트로 부호 확장하는 회로를 구축합니다. 이를 위해서는 부호 비트의 복사본 24개를 연결하고(즉, 비트[7]을 24번 복제) 8비트 숫자 자체를 연결해야 합니다.
+예시 :
+```
+{5{1'b1}}           // 5'b11111 (or 5'd31 or 5'h1f)
+{2{a,b,c}}          // The same as {a,b,c,a,b,c}
+{3'd5, {2{3'd6}}}   // 9'b101_110_110. It's a concatenation of 101 with
+                    // the second vector, which is two copies of 3'b110.
+```
+### 코드
+```verilog
+	module top_module (
+    input [7:0] in,
+    output [31:0] out );//
+
+    assign out = { {24{in[7]}}, in };
+
+endmodule
+
+```
+
+
+
+
+
+# 9. More replication
+### 문제
+5개의 1비트 신호(a, b, c, d, e)가 주어지면 25비트 출력 벡터에서 25개의 쌍별 1비트 비교를 모두 계산합니다. 비교되는 두 비트가 동일한 경우 출력은 1이어야 합니다.
+![](https://velog.velcdn.com/images/courage_hw/post/9cd815f6-4441-4de5-a3a8-7947d93fbe3d/image.png)
+
+### 코드
+```verilog
+module top_module (
+    input a, b, c, d, e,
+    output [24:0] out );//
+
+    assign out = ~{ {5{a}}, {5{b}}, {5{c}}, {5{d}}, {5{e}}, } ^ { {5{a, b, c, d, e}} };
+endmodule
+```
