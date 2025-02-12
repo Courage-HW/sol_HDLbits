@@ -8,8 +8,10 @@
 module top_module(input in, output out);
 	assign out = in;
 endmodule
-```
----
+
+
+
+
 
 # 2. Four wires
 ### 문제
@@ -32,8 +34,10 @@ module top_module(
     assign z = c;
 
 endmodule
-```
----
+
+
+
+
 
 # 3. Inverter
 ### 문제
@@ -45,9 +49,11 @@ module top_module( input in, output out );
 	// assign out = ~in; // 방법 1
     not(out, in); // 방법 2
 endmodule
-```
 
----
+
+
+
+
 # 4. AND Gate
 ### 문제
 AND 게이트를 구현하는 모듈을 만듭니다.
@@ -64,8 +70,11 @@ module top_module(
     and(out, a, b); // 방법 2
 
 endmodule
-```
----
+
+
+
+
+
 # 5. NOR Gate
 ### 문제
 NOR 게이트를 구현하는 모듈을 만듭니다
@@ -82,8 +91,11 @@ module top_module(
     nor(out, a, b);
 
 endmodule
-```
----
+
+
+
+
+
 # 6. XNOR Gate
 ### 문제
 XNOR 게이트를 구현하는 모듈을 만듭니다.
@@ -100,8 +112,11 @@ module top_module(
     xnor(out, a, b);
 
 endmodule
-```
----
+
+
+
+
+
 # 7. Declaring wires
 ### 문제
 wire를 본문에 선언
@@ -127,8 +142,12 @@ module top_module(
     assign out_n = ~(w1 | w2);
     
 endmodule
-```
----
+
+
+
+
+
+
 # 8. 7458 chip
 ### 문제
 7458은 4개의 AND 게이트와 2개의 OR 게이트가 있는 칩입니다
@@ -158,7 +177,3 @@ module top_module (
     assign p2y = w3 | w4;
 
 endmodule
-```
----
-
-다음시간은 Vector 에 대해 알아보겠다.
